@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PS4 Remote PKG Installer</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            text-decoration: none;
+        }
+
+        .installfm {
+            padding: 30px;
+            position: relative;
+            left: 0px;
+            top: 200px;
+            right: 0px;
+            bottom: 0px;
+            margin: auto;
+            width: 300px;
+            min-height: 300px;
+            background: #f2f2f2;
+            border: 1px solid #cccdcf;
+            font-size: 18px;
+            font-family: "PingFang SC";
+            font-weight: bolder;
+            color: #757575;
+        }
+
+        .installfm p {
+            margin-top: 6px;
+            margin-bottom: 20px;
+        }
+
+        .installfm input,
+        select {
+            box-sizing: border-box;
+            outline-style: none;
+            border: 1px solid #cccdcf;
+            border-radius: 2px;
+            padding: 7px 10px;
+            width: 300px;
+            font-size: 16px;
+            font-family: "PingFang SC";
+            color: #333;
+            box-shadow: inset 0 2px 3px #e8e8e8;
+        }
+
+        .commit {
+            background: #f2f2f2;
+        }
+
+        .commit:hover {
+            background: #e9e9e9;
+        }
+
+        .commit:active {
+            background: #dbdbdb;
+        }
+
+
+        .copyright {
+            /* padding: 30px; */
+            text-align: center;
+            margin: auto;
+            font-size: 16px;
+            font-style: italic;
+            font-weight: lighter;
+            font-family: "PingFang SC";
+            color: #a5a5a5;
+        }
+    </style>
+
+    <script type="text/javascript">
+        window.onload = function () {
+            var show_copyright = document.getElementsByClassName("copyright")[0];
+            show_copyright.innerHTML = "@myandyourloves @misyx @aoeassio\b 以上三位请勿使用本页面";
+            show_copyright.style.display = "block";
+            setTimeout(function () { show_copyright.style.display = "none" }, 10000);
+        }
+
+        function loading_message(str) {
+            var loadingdiv = document.getElementById("loading");
+            loadingdiv.innerHTML = str;
+            loadingdiv.style.display = '';
+            setTimeout(function () { loadingdiv.style.display = "none" }, 2000);
+        }
+        function post_api(url, obj, api_type) {
+            var httpRequest = new XMLHttpRequest();
+            httpRequest.open('POST', url, true);
+            httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            httpRequest.send(JSON.stringify(obj));
+
+            //连接loading
+            var loadingdiv = document.getElementById("loading");
+            loadingdiv.innerHTML = "PS4 连接中，请稍等...";
+            loadingdiv.style.display = '';
+            //执行操作
+            httpRequest.onreadystatechange = function () {
+                if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+                    loadingdiv.style.display = "none";
+
+                    var json = httpRequest.responseText;
+                    var data = (new Function("", "return" + json))();
+                    if (api_type == "install") {
+                        if (data["status"] == "success") {
+                            loading_message("开始安装 " + data["title"]);
+                            // alert("开始安装 " + data["title"] + " task id:" + data["task_id"]);
+                        } else if (data["status"] == "fail" && data["error_code"] == 2157510677) {
+                            loading_message("安装失败，已安装");
+
+                        } else {
+                            loading_message("错误，请检查输入的安装信息是否正确");
+                        }
+                    } else if (api_type == "is_exists") {
+                        if (data["exists"] == "true") {
+                            loading_message("已安装");
+
+                        } else if (data["exists"] == "false") {
+                            loading_message("未安装");
+                        } else {
+                            loading_message("错误，请检查输入的Title ID是否正确");
+                        }
+                    } else if (api_type == "uninstall_game" || api_type == "uninstall_patch" || api_type == "uninstall_ac" || api_type == "uninstall_theme") {
+                        if (data["status"] == "success") {
+                            loading_message("卸载成功");
+
+                        } else if (data["status"] == "fail" && data["error_code"] == 2157510660) {
+                            loading_message("卸载失败，该卸载内容不存在");
+                        } else {
+                            loading_message("错误，请检查输入的卸载信息是否正确");
+                        }
+                    }
+
+                    console.log(data);
+                } else if (httpRequest.status == 500) {
+                    loadingdiv.innerHTML = "错误，无法连接！";
+                    setTimeout(function () { loadingdiv.style.display = "none" }, 2000);
+                    console.log(data);
+                } else {
+                    loadingdiv.innerHTML = "PS4 连接超时";
+                    setTimeout(function () { loadingdiv.style.display = "none" }, 2000);
+                    console.log(data);
+                }
+            }
+        }
+
+        function check_input() {
+            var loadingdiv = document.getElementById("loading");
+
+            if (document.getElementById("ps4ip").value.length == 0) {
+                loading_message("请输入PS4 ip地址");
+                document.getElementById("ps4ip").focus();
+                return false;
+            }
+            if (document.getElementById("fileurl").value.length == 0) {
+                loading_message("请输入操作内容");
+                document.getElementById("fileurl").focus();
+                return false;
+            }
+            var api_type = document.getElementById("ps4api").value;
+            var url = 'http://' + document.getElementById("ps4ip").value + ':12800/api/' + api_type;
+            var pkgurl = document.getElementById("fileurl").value;
+            var obj = {};
+            var gamename = pkgurl.split("/")[4];
+            switch (api_type) {
+                case "is_exists":
+                    obj.title_id = pkgurl.toUpperCase();
+                    post_api(url, obj, api_type);
+                    break;
+                case "install":
+                    obj.type = "direct";
+                    var pkgarr = new Array();
+                    pkgarr = pkgurl.split(",");
+                    // pkgarr.push(pkgurl);
+                    obj.packages = pkgarr;
+                    post_api(url, obj, api_type);
+                    break;
+                case "uninstall_game":
+                    obj.title_id = pkgurl.toUpperCase();
+                    post_api(url, obj, api_type);
+                    break;
+                case "uninstall_patch":
+                    obj.title_id = pkgurl.toUpperCase();
+                    post_api(url, obj, api_type);
+                    break;
+                case "uninstall_ac":
+                    obj.content_id = pkgurl.toUpperCase();
+                    post_api(url, obj, api_type);
+                    break;
+                case "uninstall_theme":
+                    obj.content_id = pkgurl.toUpperCase();
+                    post_api(url, obj, api_type);
+                    break;
+                default:
+                    loading_message("请选择操作类型后执行");
+                    break;
+            }
+
+        }
+    </script>
+</head>
+
+<body>
+    <div class="installfm">
+        <form>
+            <div id="loading" style="padding: 10px; color:#333; display:none; position:relative; text-align: center;">
+            </div>
+            <span>PS4 IP：</span>
+            <p><input id="ps4ip" type="text" name="ps4ipaddr" value="192.168.1.123" onfocus="this.value=''" /></p>
+
+            <span>操作类型：</span>
+            <p>
+                <select name="api" id="ps4api">
+                    <option value="not_select">-- 选择操作类型 --</option>
+                    <option value="is_exists">是否已安装（Title ID）</option>
+                    <option value="install">安装PKG（Packages）</option>
+                    <option value="uninstall_game">卸载游戏（Title ID）</option>
+                    <option value="uninstall_patch">卸载补丁（Title ID）</option>
+                    <option value="uninstall_ac">卸载DLC（Content ID）</option>
+                    <option value="uninstall_theme">卸载主题（Content ID）</option>
+                </select>
+            </p>
+
+            <span>操作内容：</span>
+            <!-- <p><input class="addurl" type="button" value="+" onclick="" /></p> -->
+            <p><input id="fileurl" type="text" name="pkgfile" onfocus="this.value=''" autocomplete="off" /></p>
+
+            <p><input class="commit" type="button" value="执行" onclick="check_input();" /></p>
+        </form>
+        <div class="copyright" style="display: none">by ERMAC</div>
+    </div>
+
+</body>
+
+</html>
