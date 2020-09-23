@@ -50,6 +50,12 @@
             box-shadow: inset 0 2px 3px #e8e8e8;
         }
 
+        .installfm input:focus {
+            border-style: solid;
+            border-color: #bcbdbe;
+            box-shadow: 0 0 10px #b8b5b5;
+        }
+
         .commit {
             background: #f2f2f2;
         }
@@ -59,7 +65,7 @@
         }
 
         .commit:active {
-            background: #dbdbdb;
+            background: #f2f2f2;
         }
 
 
@@ -76,13 +82,6 @@
     </style>
 
     <script type="text/javascript">
-        window.onload = function () {
-            var show_copyright = document.getElementsByClassName("copyright")[0];
-            show_copyright.innerHTML = "@myandyourloves @misyx @aoeassio\b 以上三位请勿使用本页面";
-            show_copyright.style.display = "block";
-            setTimeout(function () { show_copyright.style.display = "none" }, 10000);
-        }
-
         function loading_message(str) {
             var loadingdiv = document.getElementById("loading");
             loadingdiv.innerHTML = str;
@@ -211,7 +210,8 @@
             <div id="loading" style="padding: 10px; color:#333; display:none; position:relative; text-align: center;">
             </div>
             <span>PS4 IP：</span>
-            <p><input id="ps4ip" type="text" name="ps4ipaddr" value="192.168.1.123" onfocus="this.value=''" /></p>
+            <p><input id="ps4ip" type="text" name="ps4ipaddr" value="192.168.1.123" maxlength=15
+                    onfocus="this.value=''" /></p>
 
             <span>操作类型：</span>
             <p>
@@ -232,7 +232,7 @@
 
             <p><input class="commit" type="button" value="执行" onclick="check_input();" /></p>
         </form>
-        <div class="copyright" style="display: none">by ERMAC</div>
+        <div class="copyright">by ERMAC</div>
     </div>
 
 </body>
