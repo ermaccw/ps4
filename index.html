@@ -82,12 +82,33 @@
     </style>
 
     <script type="text/javascript">
+        // 根据访问终端调整页面
+        function set_installfm_top() {
+            var userAgentInfo = navigator.userAgent;
+            var Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+            var flag = true;
+            for (var v = 0; v < Agents.length; v++) {
+                if (userAgentInfo.indexOf(Agents[v]) > 0) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+            } else {
+                document.getElementsByTagName("div")[0].style.top = "0px";
+            }
+        }
+        window.onload = set_installfm_top;
+
+        // 运行loading
         function loading_message(str) {
             var loadingdiv = document.getElementById("loading");
             loadingdiv.innerHTML = str;
             loadingdiv.style.display = '';
             setTimeout(function () { loadingdiv.style.display = "none" }, 2000);
         }
+
+        // 操作请求
         function post_api(url, obj, api_type) {
             var httpRequest = new XMLHttpRequest();
             httpRequest.open('POST', url, true);
@@ -148,6 +169,7 @@
             }
         }
 
+        // 检测输入合法性
         function check_input() {
             var loadingdiv = document.getElementById("loading");
 
