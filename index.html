@@ -13,18 +13,23 @@
             text-decoration: none;
         }
 
+        body {
+            background: #f0f0f0;
+        }
+
         .installfm {
             padding: 30px;
             position: relative;
             left: 0px;
-            top: 200px;
+            top: 300px;
             right: 0px;
             bottom: 0px;
             margin: auto;
             width: 300px;
             min-height: 300px;
-            background: #f2f2f2;
+            background: #eeeeee;
             border: 1px solid #cccdcf;
+            border-radius: 15px;
             font-size: 18px;
             font-family: "PingFang SC";
             font-weight: bolder;
@@ -41,7 +46,7 @@
             box-sizing: border-box;
             outline-style: none;
             border: 1px solid #cccdcf;
-            border-radius: 2px;
+            border-radius: 8px;
             padding: 7px 10px;
             width: 300px;
             font-size: 16px;
@@ -52,8 +57,8 @@
 
         .installfm input:focus {
             border-style: solid;
-            border-color: #bcbdbe;
-            box-shadow: 0 0 10px #b8b5b5;
+            box-shadow: 0 1px 6px rgba(32, 33, 36, .28);
+            border-color: rgba(223, 225, 229, 0);
         }
 
         .commit {
@@ -68,21 +73,19 @@
             background: #f2f2f2;
         }
 
-
         .copyright {
             /* padding: 30px; */
             text-align: center;
             margin: auto;
-            font-size: 16px;
+            font-size: 15px;
             font-style: italic;
-            font-weight: lighter;
+            font-weight: 300;
             font-family: "PingFang SC";
             color: #a5a5a5;
         }
     </style>
 
     <script type="text/javascript">
-        // 根据访问终端调整页面
         function set_installfm_top() {
             var userAgentInfo = navigator.userAgent;
             var Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone"
@@ -104,7 +107,6 @@
         }
         window.onload = set_installfm_top;
 
-        // 运行loading
         function loading_message(str) {
             var loadingdiv = document.getElementById("loading");
             loadingdiv.innerHTML = str;
@@ -112,7 +114,6 @@
             setTimeout(function () { loadingdiv.style.display = "none" }, 2000);
         }
 
-        // 操作请求
         function post_api(url, obj, api_type) {
             var httpRequest = new XMLHttpRequest();
             httpRequest.open('POST', url, true);
@@ -173,7 +174,6 @@
             }
         }
 
-        // 检测输入合法性
         function check_input() {
             var loadingdiv = document.getElementById("loading");
 
@@ -234,6 +234,7 @@
     <div class="installfm">
         <div id="loading" style="padding: 10px; color:#333; display:none; position:relative; text-align: center;">
         </div>
+
         <span>PS4 IP：</span>
         <p><input id="ps4ip" type="text" name="ps4ipaddr" value="192.168.1.123" maxlength=15 onfocus="this.value=''" />
         </p>
