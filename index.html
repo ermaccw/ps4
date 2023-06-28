@@ -87,14 +87,14 @@
 
     <script type="text/javascript">
         function set_installfm_top() {
-            var userAgentInfo = navigator.userAgent;
-            var Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone"
+            let userAgentInfo = navigator.userAgent;
+            let Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone"
                 , "iPad", "iPod", "MIDP", "SymbianOS", "NOKIA", "SAMSUNG"
                 , "LG", "NEC", "TCL", "Alcatel", "BIRD", "DBTEL", "Dopod"
                 , "PHILIPS", "HAIER", "LENOVO", "MOT", "Nokia", "SonyEricsson"
                 , "SIE", "Amoi", "ZTE"];
-            var flag = true;
-            for (var v = 0; v < Agents.length; v++) {
+            let flag = true;
+            for (let v = 0; v < Agents.length; v++) {
                 if (userAgentInfo.indexOf(Agents[v]) > 0) {
                     flag = false;
                     break;
@@ -108,20 +108,20 @@
         window.onload = set_installfm_top;
 
         function loading_message(str) {
-            var loadingdiv = document.getElementById("loading");
+            let loadingdiv = document.getElementById("loading");
             loadingdiv.innerHTML = str;
             loadingdiv.style.display = '';
             setTimeout(function () { loadingdiv.style.display = "none" }, 2000);
         }
 
         function post_api(url, obj, api_type) {
-            var httpRequest = new XMLHttpRequest();
+            let httpRequest = new XMLHttpRequest();
             httpRequest.open('POST', url, true);
             httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             httpRequest.send(JSON.stringify(obj));
 
             //连接loading
-            var loadingdiv = document.getElementById("loading");
+            let loadingdiv = document.getElementById("loading");
             loadingdiv.innerHTML = "PS4 连接中，请稍等...";
             loadingdiv.style.display = '';
             //执行操作
@@ -129,8 +129,8 @@
                 if (httpRequest.readyState == 4 && httpRequest.status == 200) {
                     loadingdiv.style.display = "none";
 
-                    var json = httpRequest.responseText;
-                    var data = (new Function("", "return" + json))();
+                    let json = httpRequest.responseText;
+                    let data = (new Function("", "return" + json))();
                     if (api_type == "install") {
                         if (data["status"] == "success") {
                             loading_message("开始安装 " + data["title"]);
@@ -175,7 +175,7 @@
         }
 
         function check_input() {
-            var loadingdiv = document.getElementById("loading");
+            let loadingdiv = document.getElementById("loading");
 
             if (document.getElementById("ps4ip").value.length == 0) {
                 loading_message("请输入PS4 ip地址");
@@ -187,11 +187,11 @@
                 document.getElementById("fileurl").focus();
                 return false;
             }
-            var api_type = document.getElementById("ps4api").value;
-            var url = 'http://' + document.getElementById("ps4ip").value + ':12800/api/' + api_type;
-            var pkgurl = document.getElementById("fileurl").value;
-            var obj = {};
-            var gamename = pkgurl.split("/")[4];
+            let api_type = document.getElementById("ps4api").value;
+            let url = 'http://' + document.getElementById("ps4ip").value + ':12800/api/' + api_type;
+            let pkgurl = document.getElementById("fileurl").value;
+            let obj = {};
+            let gamename = pkgurl.split("/")[4];
             switch (api_type) {
                 case "is_exists":
                     obj.title_id = pkgurl.toUpperCase();
@@ -199,7 +199,7 @@
                     break;
                 case "install":
                     obj.type = "direct";
-                    var pkgarr = new Array();
+                    let pkgarr = new Array();
                     pkgarr = pkgurl.split(",");
                     // pkgarr.push(pkgurl);
                     obj.packages = pkgarr;
