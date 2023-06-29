@@ -84,7 +84,36 @@
             color: #a5a5a5;
         }
     </style>
+</head>
 
+<body>
+    <div class="installfm">
+        <div id="loading" style="padding: 10px; color:#333; display:none; position:relative; text-align: center;">
+        </div>
+
+        <span>PS4 IP：</span>
+        <p><input id="ps4ip" type="text" name="ps4ipaddr" maxlength=15 autocomplete="on" />
+        </p>
+
+        <span>操作类型：</span>
+        <p>
+            <select name="api" id="ps4api">
+                <option value="not_select">-- 选择操作类型 --</option>
+                <option value="is_exists">是否已安装（Title ID）</option>
+                <option value="install">安装PKG（Packages）</option>
+                <option value="uninstall_game">卸载游戏（Title ID）</option>
+                <option value="uninstall_patch">卸载补丁（Title ID）</option>
+                <option value="uninstall_ac">卸载DLC（Content ID）</option>
+                <option value="uninstall_theme">卸载主题（Content ID）</option>
+            </select>
+        </p>
+
+        <span>操作内容：</span>
+        <!-- <p><input class="addurl" type="button" value="+" onclick="" /></p> -->
+        <p><input id="fileurl" type="text" name="pkgfile" onfocus="this.value=''" autocomplete="off" /></p>
+        <p><input class="commit" type="button" value="执行" onclick="check_input();" /></p>
+        <div class="copyright">by ERMAC</div>
+    </div>
     <script type="text/javascript">
         function set_installfm_top() {
             let userAgentInfo = navigator.userAgent;
@@ -225,40 +254,8 @@
                     loading_message("请选择操作类型后执行");
                     break;
             }
-
         }
     </script>
-</head>
-
-<body>
-    <div class="installfm">
-        <div id="loading" style="padding: 10px; color:#333; display:none; position:relative; text-align: center;">
-        </div>
-
-        <span>PS4 IP：</span>
-        <p><input id="ps4ip" type="text" name="ps4ipaddr" maxlength=15 autocomplete="on" />
-        </p>
-
-        <span>操作类型：</span>
-        <p>
-            <select name="api" id="ps4api">
-                <option value="not_select">-- 选择操作类型 --</option>
-                <option value="is_exists">是否已安装（Title ID）</option>
-                <option value="install">安装PKG（Packages）</option>
-                <option value="uninstall_game">卸载游戏（Title ID）</option>
-                <option value="uninstall_patch">卸载补丁（Title ID）</option>
-                <option value="uninstall_ac">卸载DLC（Content ID）</option>
-                <option value="uninstall_theme">卸载主题（Content ID）</option>
-            </select>
-        </p>
-
-        <span>操作内容：</span>
-        <!-- <p><input class="addurl" type="button" value="+" onclick="" /></p> -->
-        <p><input id="fileurl" type="text" name="pkgfile" onfocus="this.value=''" autocomplete="off" /></p>
-        <p><input class="commit" type="button" value="执行" onclick="check_input();" /></p>
-        <div class="copyright">by ERMAC</div>
-    </div>
-
 </body>
 
 </html>
